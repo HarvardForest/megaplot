@@ -6,18 +6,20 @@ packs <- c('ggplot2')
 sapply(packs,function(x) if (!(x %in% installed.packages()[,1])){install.packages(x)})
 sapply(packs,require,quiet=T,char=T)
 
+
 ### Import data from HF archives HF253
 elev <- read.csv('http://harvardforest.fas.harvard.edu/data/p25/hf253/hf253-01-elevation.csv')
 codes <- read.csv('http://harvardforest.fas.harvard.edu/data/p25/hf253/hf253-02-species-codes.csv')
 trees <- read.csv('http://harvardforest.fas.harvard.edu/data/p25/hf253/hf253-03-trees-2014.csv')
 stems <- read.csv('http://harvardforest.fas.harvard.edu/data/p25/hf253/hf253-04-stems-2014.csv')
 
-### get the code for chestnut
-codes[agrep('castanea',codes[,'latin'],ign=T),'sp']
+### pick species
+search.spp <- 'castan';as.character(codes[agrep(search.spp,codes[,'latin'],ign=T),'sp'])
+my.sp <- 'castde'
 
 ### delimit the dataset to chestnut, merging trees and stems
-cade.tr <- trees[trees[,'sp'] == 'castde',]
-cade.st <- stems[stems[,'sp'] == 'castde',]
+cade.tr <- trees[trees[,'sp'] == my.sp,]
+cade.st <- stems[stems[,'sp'] == my.sp,]
 cade <- rbind(cade.tr[,colnames(cade.tr) %in% colnames(cade.st)],cade.st[,colnames(cade.st) %in% colnames(cade.tr)])
 cade <- cade[duplicated(cade[,'tree.id']),]
 
